@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #fff0f3;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            text-align: center;
+            transition: background-color 1s;
+        }
+
+        /* Proposal UI */
+        #proposalSection { display: block; }
+        h1 { color: #ff4d6d; font-size: 2.8rem; margin-bottom: 10px; }
+        #subHeading { color: #ff758f; font-size: 1.5rem; margin-bottom: 30px; height: 1.5rem; }
+
+        .btn-container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-height: 250px;
+            width: 100%;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #yesBtn { background-color: #ff4d6d; color: white; z-index: 100; }
+        #noBtn { background-color: #8a8a8a; color: white; position: relative; }
+
+        #giftBtn {
+            display: none;
+            background-color: #ffb3c1;
+            color: #d63384;
+            border: 2px solid #d63384;
+            margin-top: 20px;
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Countdown UI */
+        #countdownSection { display: none; color: white; }
+        #timer { font-size: 7rem; font-weight: bold; }
+
+        /* Coupon UI */
+        #couponSection {
+            display: none;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 5px dashed #ffb3c1;
+            max-width: 400px;
+            color: #333;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .details strong { color: #ff4d6d; font-size: 1.8rem; }
+        .code-box { background: #fff0f3; padding: 10px; border: 1px solid #ff4d6d; color: #ff4d6d; font-weight: bold; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+    <div id="proposalSection">
+        <h1 id="heading">Will you be my Valentine? ❤️</h1>
+        <p id="subHeading"></p>
+        <div class="btn-container" id="buttonGroup">
+            <button id="yesBtn">Yes</button>
+            <button id="noBtn">No</button>
+        </div>
+        <button id="giftBtn" onclick="startCountdown()">🎁 OPEN YOUR SPECIAL GIFT</button>
+    </div>
+
+    <div id="countdownSection">
+        <h1>UNWRAPPING YOUR GIFT IN...</h1>
+        <div id="timer">5</div>
+    </div>
+
+    <div id="couponSection">
+        <h1>💖 VALENTINE'S GIFT 💖</h1>
+        <p class="details">
+            This coupon entitles you to:<br>
+            <strong>FREE WINGS</strong> <br>
+            <strong>FREE SHAWARMA</strong><br>
+            <strong>FREE HUGS AND KISSES</strong>
+        </p>
+        <div class="code-box">PROMO: FET'S LUCK</div>
+        <p style="font-size: 0.8rem; color: #888; margin-top: 15px;">Valid Forever | Unlimited Redemptions</p>
+        <button onclick="window.print()" style="background: none; color: #ff758f; text-decoration: underline; font-size: 0.8rem; margin-top: 10px;">Save Coupon</button>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const giftBtn = document.getElementById('giftBtn');
+        const heading = document.getElementById('heading');
+        const subHeading = document.getElementById('subHeading');
+        const proposalSection = document.getElementById('proposalSection');
+        const countdownSection = document.getElementById('countdownSection');
+        const couponSection = document.getElementById('couponSection');
+
+        let yesScale = 1;
+
+        const moveNo = () => {
+            noBtn.style.position = 'absolute';
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
+
+            yesScale += 0.4;
+            yesBtn.style.transform = `scale(${yesScale})`;
+        };
+
+        noBtn.addEventListener('mouseover', moveNo);
+        noBtn.addEventListener('click', moveNo);
+
+        yesBtn.addEventListener('click', () => {
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+
+            heading.innerText = "ami jantam you had a tad bit of crush on me";
+            subHeading.innerText = "I'm so happy you said yes! 🥰, no bolle ghushi martam";
+
+            document.getElementById('buttonGroup').style.display = 'none';
+            giftBtn.style.display = 'inline-block';
+        });
+
+        function startCountdown() {
+            proposalSection.style.display = 'none';
+            countdownSection.style.display = 'block';
+            document.body.style.backgroundColor = '#ff4d6d';
+
+            let timeLeft = 5;
+            const timerElement = document.getElementById('timer');
+
+            const timerId = setInterval(() => {
+                timeLeft--;
+                timerElement.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerId);
+                    showFinalCoupon();
+                }
+            }, 1000);
+        }
+
+        function showFinalCoupon() {
+            countdownSection.style.display = 'none';
+            couponSection.style.display = 'block';
+            document.body.style.backgroundColor = '#fff0f3';
+            confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+        }
+    </script>
+</body>
+</html>
